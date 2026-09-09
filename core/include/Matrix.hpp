@@ -13,6 +13,7 @@ class Matrix {
         size_t numRows() const;
         size_t numCols() const;
         Matrix transpose() const;
+        Matrix operator*(double scalar) const; // scalar multiplication
         Matrix operator*(const Matrix& other) const; // override of the multiplication between matrices
         Matrix operator-(const Matrix& other) const; // override of the subtraction between matrices
         Matrix operator+(const Matrix& other) const; // override of the addition between matrices

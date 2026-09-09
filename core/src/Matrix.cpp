@@ -1,5 +1,7 @@
 # include "Matrix.hpp"
 # include <stdexcept>
+# include <iostream>
+# include <cmath>
 
 Matrix::Matrix(size_t rows, size_t cols) : rows(rows), cols(cols) {
     data.resize(rows, std::vector<double>(cols, 0.0));
@@ -29,6 +31,16 @@ Matrix Matrix::transpose() const {
         }
     }
     return transposedData;
+}
+
+Matrix Matrix::operator*(double scalar) const {
+    Matrix result(rows, cols);
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            result(i, j) = data[i][j] * scalar;
+        }
+    }
+    return result;
 }
 
 Matrix Matrix::operator*(const Matrix& other) const {
@@ -96,7 +108,7 @@ Matrix Matrix::inverse() const {
     for (size_t i = 0; i < rows; ++i) {
         // Make the diagonal contain all 1s
         double diagElement = augmented(i, i); // pivot element
-        if (diagElement == 0) {
+        if (std::abs(diagElement) < 1e-9) {
             throw std::runtime_error("Matrix is singular and cannot be inverted.");
         }
         for (size_t j = 0; j < 2 * cols; ++j) {

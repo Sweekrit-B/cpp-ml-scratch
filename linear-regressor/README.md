@@ -32,8 +32,11 @@ constant offset. To add one, prepend a column of `1`s to `X` before running the 
 
 ## The `Matrix` class
 
-Declared in [`include/Matrix.hpp`](include/Matrix.hpp), implemented in [`src/Matrix.cpp`](src/Matrix.cpp).
-Backed internally by `std::vector<std::vector<double>>`.
+Declared in [`../core/include/Matrix.hpp`](../core/include/Matrix.hpp), implemented in
+[`../core/src/Matrix.cpp`](../core/src/Matrix.cpp) — it lives in the shared `core/` library
+(see [Project structure](#project-structure) below), not inside `linear-regressor/` itself,
+since it's generic linear algebra with nothing regression-specific about it. Backed
+internally by `std::vector<std::vector<double>>`.
 
 | Member | Purpose |
 |---|---|
@@ -87,45 +90,49 @@ need pivoting added for robustness on larger/noisier ones.
 
 ## `DataLoader`
 
-Declared in [`include/DataLoader.hpp`](include/DataLoader.hpp), implemented in
-[`src/DataLoader.cpp`](src/DataLoader.cpp). `DataLoader::loadCSV(path)` reads a CSV of
-purely numeric, comma-separated values (**no header row support**) into a `Matrix`, one row
-per line. Throws `std::runtime_error` on a missing file, an empty file, or a row with an
-inconsistent column count.
+Declared in [`../core/include/DataLoader.hpp`](../core/include/DataLoader.hpp), implemented
+in [`../core/src/DataLoader.cpp`](../core/src/DataLoader.cpp) — also part of `core/`, since
+CSV loading has nothing regression-specific about it either. `DataLoader::loadCSV(path)`
+reads a CSV of purely numeric, comma-separated values (**no header row support**) into a
+`Matrix`, one row per line. Throws `std::runtime_error` on a missing file, an empty file, or
+a row with an inconsistent column count.
 
 ## Project structure
 
+`Matrix` and `DataLoader` live in a shared `core/` library at the repo root, so future models
+(e.g. a classifier) can reuse them without duplicating code — `linear-regressor/` only holds
+what's actually specific to this model:
+
 ```
-linear-regressor/
-├── include/
-│   ├── Matrix.hpp       # Matrix class declaration
-│   └── DataLoader.hpp   # CSV loader declaration
-├── src/
-│   ├── Matrix.cpp       # Matrix class implementation
-│   ├── DataLoader.cpp   # CSV loader implementation
-│   └── main.cpp         # Regression pipeline (runLinearRegression) + entry point
-├── tests/
-│   └── test_matrix.cpp  # (WIP)
-├── data.csv             # Sample dataset: y = 2x1 + 3x2, noise-free
-└── CMakeLists.txt       # (WIP — not yet configured; build via g++ directly for now)
+cpp-ml-scratch/
+├── core/                     # shared library — generic, model-agnostic building blocks
+│   ├── include/
+│   │   ├── Matrix.hpp        # Matrix class declaration
+│   │   └── DataLoader.hpp    # CSV loader declaration
+│   ├── src/
+│   │   ├── Matrix.cpp        # Matrix class implementation
+│   │   └── DataLoader.cpp    # CSV loader implementation
+│   └── tests/
+│       └── test_matrix.cpp   # (WIP)
+└── linear-regressor/
+    ├── src/
+    │   └── main.cpp          # Regression pipeline (runLinearRegression) + entry point
+    ├── data.csv              # Sample dataset: y = 2x1 + 3x2, noise-free
+    ├── README.md             # this file
+    └── CMakeLists.txt        # (WIP — not yet configured; build via g++ directly for now)
 ```
 
-## Building and running
+## Datasets
 
-No CMake target is configured yet, so build directly with g++:
+Both files are expected in the working directory you run the executable from
+(`linear-regressor/`). Format: comma-separated numeric rows, no header, feature columns
+first, target column last.
 
-```powershell
-g++ -std=c++17 -Wall -Wextra -Iinclude src/main.cpp src/Matrix.cpp src/DataLoader.cpp -o linreg.exe
-.\linreg.exe
-```
+### `data.csv` — synthetic
 
-- `-Iinclude` — resolves `#include "Matrix.hpp"` etc. against the `include/` directory
-- All three `.cpp` files must be listed together — each is a separate translation unit, and
-  the linker needs every one that contributes code (miss one and you'll get an "undefined
-  reference" linker error instead of a compile error)
-
-`data.csv` is expected in the working directory you run the executable from. Its format is
-comma-separated numeric rows, feature columns first, target column last:
+Hand-generated, noise-free: `y = 2x1 + 3x2`. Used as a sanity check — since there's no
+noise and the true relationship is exactly linear (and now includes an intercept-compatible
+form), MSE should land near zero.
 
 ```
 x1,x2,y
@@ -136,19 +143,61 @@ x1,x2,y
 4,3,17
 ```
 
-Example output against the sample data above (a perfect, noise-free linear relationship,
+### `data_advertising.csv` — real-world
+
+The **Advertising** dataset (200 rows: TV, radio, and newspaper ad spend → sales), originally
+distributed with *An Introduction to Statistical Learning* (James, Witten, Hastie &
+Tibshirani) — canonical copy at https://www.statlearning.com/s/Advertising.csv. Pulled here
+via a GitHub mirror:
+
+```
+https://raw.githubusercontent.com/selva86/datasets/master/Advertising.csv
+```
+
+The original CSV has a header row and a leading row-index column (`,TV,radio,newspaper,sales`);
+both were stripped before saving, since `DataLoader::loadCSV` expects purely numeric rows with
+no header:
+
+```powershell
+# (bash/WSL) — drop the header line and the first column
+tail -n +2 Advertising.csv | cut -d',' -f2- > data_advertising.csv
+```
+
+Used as a more realistic accuracy check than the synthetic data — real MSE won't land near
+zero, which is itself a useful signal that the error computation is measuring something real.
+
+## Building and running
+
+No CMake target is configured yet, so build directly with g++. Run this from inside
+`linear-regressor/`:
+
+```powershell
+g++ -std=c++17 -Wall -Wextra -I../core/include ../core/src/Matrix.cpp ../core/src/DataLoader.cpp src/main.cpp -o linreg.exe
+.\linreg.exe
+```
+
+- `-I../core/include` — resolves `#include "Matrix.hpp"` etc. against `core/include/`, since
+  those headers no longer live inside `linear-regressor/` itself
+- All three `.cpp` files must be listed together — each is a separate translation unit, and
+  the linker needs every one that contributes code (miss one and you'll get an "undefined
+  reference" linker error instead of a compile error). Note two of them (`Matrix.cpp`,
+  `DataLoader.cpp`) now live under `../core/src/` rather than a local `src/`
+
+Example output against the synthetic data above (a perfect, noise-free linear relationship,
 so MSE should land near zero):
 
 ```
 Loaded data with 5 rows and 3 columns.
 Training data and target values separated.
+Added intercept term to the training data matrix.
 Transposed training data matrix.
 Computed product of transposed training data and training data.
+Added regularization term to the product matrix.
 Computed inverse of the product matrix.
 Computed coefficients for the linear regression model.
 Computed predictions using the linear regression model.
-Mean Squared Error: 1.26218e-30
-Linear regression completed successfully. MSE: 1.26218e-30
+Mean Squared Error: 4.46591e-05
+Linear regression completed successfully. MSE: 4.46591e-05
 ```
 
 ## Ideas for next steps
@@ -156,5 +205,8 @@ Linear regression completed successfully. MSE: 1.26218e-30
 - Add partial pivoting to `inverse()` for numerical stability on larger datasets
 - Support an intercept term (bias column)
 - Add a CSV header-row option to `DataLoader::loadCSV`
-- Fill in `CMakeLists.txt` so `cmake --build` replaces the hand-typed g++ command
-- Flesh out `tests/test_matrix.cpp`
+- Fill in `core/CMakeLists.txt` and `linear-regressor/CMakeLists.txt` so `cmake --build`
+  replaces the hand-typed g++ command
+- Flesh out `core/tests/test_matrix.cpp`
+- Add a classifier model (e.g. logistic regression) alongside `linear-regressor/`, reusing
+  `core/`
