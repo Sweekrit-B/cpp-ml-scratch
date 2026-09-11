@@ -20,6 +20,7 @@ class Matrix {
         Matrix inverse() const;
         Matrix hadamardProduct(const Matrix& other) const; // element-wise mutiplication
         Matrix sigmoid() const; // applies the sigmoid function to each element of the matrix
+        Matrix softmax() const; // applies the softmax function to each row of the matrix
         Matrix selectRows(const std::vector<size_t>& indices) const; // selects specific rows from the matrix
         static std::vector<size_t> sampleRowIndices(size_t totalRows, size_t numSamples); // samples row indices
         double norm() const; // computes the L2 norm of the matrix

@@ -61,7 +61,6 @@ Matrix BinaryLogisticRegressor::trainLogisticRegression(const Matrix& trainX, co
                       + weights * lambda;
 
     // step 1.2 - run mini-batch gradient descent until convergence or max iterations reached
-    std::cout << "Calculated initial gradient for logistic regression." << std::endl;
     int steps = 0;
     std::cout << "Starting gradient descent for logistic regression..." << std::endl;
 
@@ -83,24 +82,32 @@ Matrix BinaryLogisticRegressor::trainLogisticRegression(const Matrix& trainX, co
         steps++;
     }
 
-    std::cout << "Gradient descent converged." << std::endl;
-    std::cout << "Number of iterations: " << steps << std::endl;
+    std::cout << "Gradient descent completed after " << steps << " iterations." << std::endl;
 
     return weights;
 }
 
-// step 2 - evaluate a trained model against held-out test data.
+// step 2 - predict labels for held-out data.
 //
 // predictions holds the raw score Xw, not a probability — its natural decision
 // boundary is 0 (equivalent to thresholding σ(Xw) at 0.5, since σ(0) = 0.5 and
 // σ is monotonic), so we threshold at 0 directly rather than 0.5.
+Matrix BinaryLogisticRegressor::predictLogisticRegression(const Matrix& weights, const Matrix& testX) {
+    Matrix scores = testX * weights;
+    Matrix predictions(testX.numRows(), 1);
+    for (size_t i = 0; i < testX.numRows(); ++i) {
+        predictions(i, 0) = (scores(i, 0) >= 0.0) ? 1.0 : -1.0;
+    }
+    return predictions;
+}
+
+// step 3 - evaluate a trained model against held-out test data.
 double BinaryLogisticRegressor::evaluateLogisticRegression(const Matrix& weights, const Matrix& testX, const Matrix& testY) {
-    Matrix predictions = testX * weights;
+    Matrix predictions = predictLogisticRegression(weights, testX);
 
     int correctPredictions = 0;
     for (size_t i = 0; i < testX.numRows(); ++i) {
-        double predictedLabel = (predictions(i, 0) >= 0.0) ? 1.0 : -1.0;
-        if (predictedLabel == testY(i, 0)) {
+        if (predictions(i, 0) == testY(i, 0)) {
             correctPredictions++;
         }
     }

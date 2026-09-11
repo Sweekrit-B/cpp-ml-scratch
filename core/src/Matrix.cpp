@@ -163,6 +163,26 @@ Matrix Matrix::sigmoid() const {
     return result;
 }
 
+Matrix Matrix::softmax() const {
+    Matrix result(rows, cols);
+    for (size_t i = 0; i < rows; ++i) {
+        double rowMax = data[i][0];
+        for (size_t j = 1; j < cols; ++j) {
+            if (data[i][j] > rowMax) {
+                rowMax = data[i][j];
+            }
+        }
+        double sumExp = 0.0;
+        for (size_t j = 0; j < cols; ++j) {
+            sumExp += std::exp(data[i][j] - rowMax); // subtract rowMax for numerical stability
+        }
+        for (size_t j = 0; j < cols; ++j) {
+            result(i, j) = std::exp(data[i][j] - rowMax) / sumExp;
+        }
+    }
+    return result;
+}
+
 Matrix Matrix::selectRows(const std::vector<size_t>& indices) const {
     Matrix result(indices.size(), cols);
     for (size_t i = 0; i < indices.size(); ++i) {
