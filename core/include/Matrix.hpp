@@ -18,5 +18,11 @@ class Matrix {
         Matrix operator-(const Matrix& other) const; // override of the subtraction between matrices
         Matrix operator+(const Matrix& other) const; // override of the addition between matrices
         Matrix inverse() const;
+        Matrix hadamardProduct(const Matrix& other) const; // element-wise mutiplication
+        Matrix sigmoid() const; // applies the sigmoid function to each element of the matrix
+        Matrix selectRows(const std::vector<size_t>& indices) const; // selects specific rows from the matrix
+        static std::vector<size_t> sampleRowIndices(size_t totalRows, size_t numSamples); // samples row indices
+        double norm() const; // computes the L2 norm of the matrix
+        std::vector<Matrix> trainTestSplit(double testRatio) const; // splits the matrix into training and testing sets
         static Matrix identity(size_t n);
 };

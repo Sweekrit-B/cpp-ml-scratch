@@ -2,6 +2,8 @@
 # include <stdexcept>
 # include <iostream>
 # include <cmath>
+# include <random>
+# include <algorithm>
 
 Matrix::Matrix(size_t rows, size_t cols) : rows(rows), cols(cols) {
     data.resize(rows, std::vector<double>(cols, 0.0));
@@ -135,6 +137,98 @@ Matrix Matrix::inverse() const {
         }
     }
     return result;
+}
+
+Matrix Matrix::hadamardProduct(const Matrix& other) const {
+    if (rows != other.rows || cols != other.cols) {
+        throw std::invalid_argument("Matrix dimensions do not match for Hadamard product.");
+    }
+
+    Matrix result(rows, cols);
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            result(i, j) = data[i][j] * other(i, j);
+        }
+    }
+    return result;
+}
+
+Matrix Matrix::sigmoid() const {
+    Matrix result(rows, cols);
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            result(i, j) = 1.0 / (1.0 + std::exp(-data[i][j]));
+        }
+    }
+    return result;
+}
+
+Matrix Matrix::selectRows(const std::vector<size_t>& indices) const {
+    Matrix result(indices.size(), cols);
+    for (size_t i = 0; i < indices.size(); ++i) {
+        if (indices[i] >= rows) {
+            throw std::out_of_range("Row index out of range.");
+        }
+        for (size_t j = 0; j < cols; ++j) {
+            result(i, j) = data[indices[i]][j];
+        }
+    }
+    return result;
+}
+
+std::vector<size_t> Matrix::sampleRowIndices(size_t totalRows, size_t numSamples) {
+    if (numSamples > totalRows) {
+        throw std::invalid_argument("Number of samples cannot exceed total number of rows.");
+    }
+
+    std::vector<size_t> indices(totalRows);
+    for (size_t i = 0; i < totalRows; ++i) {
+        indices[i] = i;
+    }
+
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(indices.begin(), indices.end(), g);
+
+    indices.resize(numSamples);
+    return indices;
+}
+
+double Matrix::norm() const {
+    double sumSquares = 0.0;
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            sumSquares += data[i][j] * data[i][j];
+        }
+    }
+    return std::sqrt(sumSquares);
+}
+
+std::vector<Matrix> Matrix::trainTestSplit(double testRatio) const {
+    if (testRatio < 0.0 || testRatio > 1.0) {
+        throw std::invalid_argument("Test ratio must be between 0 and 1.");
+    }
+
+    size_t totalRows = rows;
+    size_t testRows = static_cast<size_t>(totalRows * testRatio);
+    size_t trainRows = totalRows - testRows;
+
+    std::vector<size_t> indices(totalRows);
+    for (size_t i = 0; i < totalRows; ++i) {
+        indices[i] = i;
+    }
+
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(indices.begin(), indices.end(), g);
+
+    std::vector<size_t> trainIndices(indices.begin(), indices.begin() + trainRows);
+    std::vector<size_t> testIndices(indices.begin() + trainRows, indices.end());
+
+    Matrix trainMatrix = selectRows(trainIndices);
+    Matrix testMatrix = selectRows(testIndices);
+
+    return {trainMatrix, testMatrix};
 }
 
 Matrix Matrix::identity(size_t n) {
