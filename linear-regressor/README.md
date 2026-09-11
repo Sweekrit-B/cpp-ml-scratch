@@ -36,7 +36,10 @@ Declared in [`../core/include/Matrix.hpp`](../core/include/Matrix.hpp), implemen
 [`../core/src/Matrix.cpp`](../core/src/Matrix.cpp) — it lives in the shared `core/` library
 (see [Project structure](#project-structure) below), not inside `linear-regressor/` itself,
 since it's generic linear algebra with nothing regression-specific about it. Backed
-internally by `std::vector<std::vector<double>>`.
+internally by a single flat `std::vector<double>` in row-major order — element `(i, j)`
+lives at `data[i * cols + j]` — rather than a `vector<vector<double>>`, so each `Matrix` is
+exactly one heap allocation instead of `rows + 1` (see the benchmarking note under California
+Housing below for why this mattered in practice).
 
 | Member | Purpose |
 |---|---|
@@ -130,7 +133,7 @@ cpp-ml-scratch/
 
 ## Datasets
 
-Both files are expected in the working directory you run the executable from
+All files are expected in the working directory you run the executable from
 (`linear-regressor/`). Format: comma-separated numeric rows, no header, feature columns
 first, target column last.
 
@@ -172,6 +175,41 @@ tail -n +2 Advertising.csv | cut -d',' -f2- > data_advertising.csv
 Used as a more realistic accuracy check than the synthetic data — real MSE won't land near
 zero, which is itself a useful signal that the error computation is measuring something real.
 
+### `data_california_housing.csv` — real-world, larger-scale (not committed)
+
+20,433 rows, 8 features (location, age, room/bedroom/population counts, income) → median house
+value — the standard "expansive" regression benchmark (successor to the now-deprecated Boston
+Housing dataset). Used to check how the closed-form solve holds up well past the 200-row
+Advertising dataset. **Not committed** — see [`../.gitignore`](../.gitignore). Regenerate it
+with:
+
+```bash
+curl -sL -o /tmp/housing_raw.csv https://raw.githubusercontent.com/ageron/handson-ml2/master/datasets/housing/housing.csv
+awk -F',' 'NR>1 && $5!="" {
+    line=$1
+    for(i=2;i<=9;i++) line=line","$i
+    print line
+}' /tmp/housing_raw.csv > data_california_housing.csv
+```
+
+The source CSV has a header row, a categorical 10th column (`ocean_proximity`, text — dropped,
+since `DataLoader::loadCSV` only parses numeric values), and ~207 rows with a missing
+`total_bedrooms` value (dropped via the `$5!=""` filter rather than imputed). Dropping the
+categorical column happens to leave the target (`median_house_value`) as the last column,
+matching this loader's convention with no reordering needed.
+
+Benchmark result (`lambda=0.01`, `testRatio=0.2`): **test MSE ≈ 4.77 × 10⁹**, i.e. RMSE ≈
+$69k — in line with typical plain-linear-regression baselines on this dataset without feature
+engineering (target values range roughly $15k–$500k). Also a good stress test for the
+`inverse()` limitation noted above: this dataset's features span wildly different scales
+(longitude ~-124, `total_rooms` up to ~7,000+), so `XᵀX` is far more ill-conditioned than
+Advertising's — partial pivoting would matter more here than it does on the smaller datasets.
+
+Timed with `std::chrono` (`[timing]` lines in [`src/main.cpp`](src/main.cpp)): **~0.20s
+loading the CSV, ~0.25s total** — unlike the two logistic regressors (see their READMEs),
+CSV parsing genuinely *is* the majority of the runtime here, since there's no iterative
+training loop — just a single closed-form solve on a small 9×9 matrix.
+
 ## Building and running
 
 Built via CMake from the **repo root** (`cpp-ml-scratch/`), not from inside this directory —
@@ -200,6 +238,7 @@ Example output (values vary slightly run to run — `Matrix::trainTestSplit` res
 fixed seed, so the train/test split, and therefore the test MSE, differs each run):
 
 ```
+[timing] loadCSV: 0.0006758s
 Loaded data with 5 rows and 3 columns.
 Split into 4 training rows and 1 test rows.
 Training and test data separated, intercept term added.
@@ -209,13 +248,34 @@ Added regularization term to the product matrix.
 Computed inverse of the product matrix.
 Computed coefficients for the linear regression model.
 Computed predictions on the test set.
-Test Mean Squared Error: 0.0123372
-Linear regression completed successfully. Test MSE: 0.0123372
+Test Mean Squared Error: 0.000174415
+[timing] total: 0.001953s (of which loadCSV: 0.0006758s)
+Linear regression completed successfully. Test MSE: 0.000174415
+
+--- Testing against real-world dataset (Advertising: TV/radio/newspaper -> sales) ---
+[timing] loadCSV: 0.0017645s
+...
+Test Mean Squared Error: 2.26322
+[timing] total: 0.0023064s (of which loadCSV: 0.0017645s)
+Advertising regression completed successfully. Test MSE: 2.26322
+
+--- Benchmarking against California Housing (20k rows, 8 features -> median house value) ---
+[timing] loadCSV: 0.195185s
+Loaded data with 20433 rows and 9 columns.
+Split into 16347 training rows and 4086 test rows.
+...
+Test Mean Squared Error: 4.76659e+09
+[timing] total: 0.253673s (of which loadCSV: 0.195185s)
+California Housing regression completed successfully. Test MSE: 4.76659e+09
 ```
+
+(the California Housing block only runs if you've regenerated `data_california_housing.csv`
+— see above)
 
 ## Ideas for next steps
 
-- Add partial pivoting to `inverse()` for numerical stability on larger datasets
+- Add partial pivoting to `inverse()` for numerical stability on larger datasets — California
+  Housing's mixed-scale features make this more pressing than it was before
 - Add a CSV header-row option to `DataLoader::loadCSV`
 - Flesh out `core/tests/test_matrix.cpp` with `LinearRegressor`-specific tests, now that it's
   a standalone, testable library rather than logic embedded in `main.cpp`

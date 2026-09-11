@@ -65,9 +65,17 @@ combined "random sample" method: mini-batch training needs the **same** random r
 from *both* `X` and `y` so features stay paired with their correct labels — generating one
 shared index list and applying it to both matrices is what keeps that pairing intact.
 
+**Storage layout:** `Matrix` backs its elements with a single flat `std::vector<double>` in
+row-major order (element `(i, j)` at `data[i * cols + j]`), not a
+`std::vector<std::vector<double>>`. The nested-vector form makes every row its own separate
+heap allocation, so constructing a `Matrix` costs `rows + 1` allocations instead of 1 — and
+this training loop constructs a fresh result `Matrix` on every multiply/transpose, 1000 times
+per run. Flattening the storage (no public API change, so no call site had to change) cut the
+MNIST benchmark below from ~5.7s to ~3.5s.
+
 ## Datasets
 
-Both expected in the working directory you run the executable from
+All expected in the working directory you run the executable from
 (`binary-logistic-regressor/`). Format: comma-separated numeric rows, no header, feature
 columns first, label last — label must be `-1` or `+1` (not `0`/`1`).
 
@@ -107,6 +115,42 @@ awk -F',' 'NR>1 && ($5=="versicolor" || $5=="virginica") {
 }' iris.csv > data_iris.csv
 ```
 
+### `data_mnist_binary.csv` — real-world, larger-scale (not committed)
+
+~2,000 rows (the `3` and `8` digits from the standard MNIST *test* split — the most
+confusable digit pair, deliberately not an easy pair like `0` vs `1`, following this repo's
+existing preference for a genuine test over a trivial one), 784 features (28×28 grayscale
+pixels, flattened). Used to check how this implementation holds up well past Iris's 100 rows
+and 4 features. **Not committed** — ~4MB, gitignored (see
+[`../.gitignore`](../.gitignore)). Regenerate it with:
+
+```bash
+curl -sL -o /tmp/mnist_test_raw.csv https://pjreddie.com/media/files/mnist_test.csv
+awk -F',' 'BEGIN{OFS=","} $1==3 || $1==8 {
+    label = ($1==8) ? 1 : -1
+    line=""
+    for (i=2; i<=NF; i++) {
+        val = $i / 255.0
+        line = (line=="") ? val : line OFS val
+    }
+    print line OFS label
+}' /tmp/mnist_test_raw.csv > data_mnist_binary.csv
+```
+
+The source mirror puts the label first (`3`/`8`) and pixels as raw `0–255` ints; the `awk`
+step filters to just those two digits, remaps the label to `-1`/`+1`, moves it to the last
+column, and normalizes pixels to `[0, 1]` (skipping normalization would reintroduce this
+version's own scale-sensitivity issue, just far worse than Iris's — pixel values up to 255 vs.
+Iris's ~8).
+
+Benchmark result (`learningRate=0.001` rather than the `0.1` used elsewhere in this file —
+needed for the same scale-sensitivity reason as the multiclass version's Iris fix, see its
+README): **94.95% test accuracy**, on a genuinely hard pair to distinguish. Timed with
+`std::chrono` (`[timing]` lines in [`src/main.cpp`](src/main.cpp)): **~0.65s loading the CSV,
+~3.5s total** — so, like the multiclass version's MNIST run, the 1000-iteration training loop
+(not CSV parsing) is the dominant cost, at roughly 82% of the runtime, even after the `Matrix`
+storage change noted above.
+
 ## Building and running
 
 Built via CMake from the **repo root** (`cpp-ml-scratch/`), not from inside this directory —
@@ -139,19 +183,36 @@ fixed seed, so the train/test split differs each run; the Iris test set is only 
 its accuracy swings more than the larger `data_advertising.csv` split in `linear-regressor`):
 
 ```
+[timing] loadCSV: 0.0005196s
 Loaded data with 8 rows and 3 columns.
 Split into 7 training rows and 1 test rows.
 ...
 Test accuracy of the logistic regression model: 100%
+[timing] total: 0.0223943s (of which loadCSV: 0.0005196s)
 Logistic regression completed successfully. Final test accuracy: 100%
 
 --- Testing against real-world dataset (Iris: versicolor vs virginica) ---
+[timing] loadCSV: 0.0010767s
 Loaded data with 100 rows and 5 columns.
 Split into 80 training rows and 20 test rows.
 ...
-Test accuracy of the logistic regression model: 80%
-Iris dataset logistic regression completed successfully. Final test accuracy: 80%
+Test accuracy of the logistic regression model: 100%
+[timing] total: 0.0375457s (of which loadCSV: 0.0010767s)
+Iris dataset logistic regression completed successfully. Final test accuracy: 100%
+
+--- Benchmarking against MNIST (3 vs 8, ~2k rows, 784 features) ---
+[timing] loadCSV: 0.646102s
+Loaded data with 1984 rows and 785 columns.
+Split into 1588 training rows and 396 test rows.
+...
+Test accuracy of the logistic regression model: 94.9495%
+[timing] total: 3.53841s (of which loadCSV: 0.646102s)
+MNIST (3 vs 8) logistic regression completed successfully. Final test accuracy: 94.9495%
 ```
+
+(the MNIST block only runs if you've regenerated `data_mnist_binary.csv` — see above;
+`[timing]` lines come from the `std::chrono` instrumentation around `DataLoader::loadCSV` and
+the full `run...` call in [`src/main.cpp`](src/main.cpp))
 
 ## Ideas for next steps
 
@@ -161,3 +222,9 @@ Iris dataset logistic regression completed successfully. Final test accuracy: 80
   would need a `Matrix::softmax()` — row-normalized, unlike the elementwise `sigmoid()` —
   plus one-hot encoded labels and matrix-valued weights)
 - Add a CSV header-row option to `DataLoader::loadCSV`
+- The training loop, not `DataLoader::loadCSV`, is still the majority of runtime at MNIST's
+  scale (~82% of the 3.5s MNIST run) even after flattening `Matrix`'s storage (see above).
+  `operator*`/`transpose()`/etc. still allocate a brand-new `Matrix` on every call — 1000
+  iterations' worth. Pre-allocating the loop's fixed-shape intermediates once and adding
+  in-place variants (e.g. `multiplyInto(other, result)`) would remove that, at the cost of a
+  more invasive API change (same next step flagged in the multiclass version's README)

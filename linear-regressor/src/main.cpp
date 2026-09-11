@@ -3,11 +3,15 @@
 # include "DataLoader.hpp"
 # include "LinearRegressor.hpp"
 # include <iostream>
+# include <chrono>
 
 // Orchestrates the pipeline for one dataset: load -> split once -> prepare -> train -> evaluate.
 double runLinearRegression(const std::string& filename, double lambda = 0, double testRatio = 0.2) {
     // step 0 - receive some data as input
+    auto loadStart = std::chrono::steady_clock::now();
     Matrix data = DataLoader::loadCSV(filename);
+    auto loadEnd = std::chrono::steady_clock::now();
+    std::cout << "[timing] loadCSV: " << std::chrono::duration<double>(loadEnd - loadStart).count() << "s" << std::endl;
     const size_t numCols = data.numCols() - 1; // last column is the target value
     std::cout << "Loaded data with " << data.numRows() << " rows and " << numCols + 1 << " columns." << std::endl;
 
@@ -25,7 +29,11 @@ double runLinearRegression(const std::string& filename, double lambda = 0, doubl
     std::cout << "Training and test data separated, intercept term added." << std::endl;
 
     Matrix coefficients = LinearRegressor::trainLinearRegression(trainX, trainY, lambda);
-    return LinearRegressor::evaluateLinearRegression(coefficients, testX, testY);
+    double result = LinearRegressor::evaluateLinearRegression(coefficients, testX, testY);
+    auto totalEnd = std::chrono::steady_clock::now();
+    std::cout << "[timing] total: " << std::chrono::duration<double>(totalEnd - loadStart).count()
+              << "s (of which loadCSV: " << std::chrono::duration<double>(loadEnd - loadStart).count() << "s)" << std::endl;
+    return result;
 }
 
 int main() {
@@ -36,6 +44,13 @@ int main() {
         std::cout << "\n--- Testing against real-world dataset (Advertising: TV/radio/newspaper -> sales) ---\n";
         double adMse = runLinearRegression("data_advertising.csv", /*lambda=*/0.01, /*testRatio=*/0.2);
         std::cout << "Advertising regression completed successfully. Test MSE: " << adMse << std::endl;
+
+        std::cout << "\n--- Benchmarking against California Housing (20k rows, 8 features -> median house value) ---\n";
+        auto runStart = std::chrono::steady_clock::now();
+        double housingMse = runLinearRegression("data_california_housing.csv", /*lambda=*/0.01, /*testRatio=*/0.2);
+        auto runEnd = std::chrono::steady_clock::now();
+        std::cout << "[timing] runLinearRegression: " << std::chrono::duration<double>(runEnd - runStart).count() << "s" << std::endl;
+        std::cout << "California Housing regression completed successfully. Test MSE: " << housingMse << std::endl;
     } catch (const std::exception& e) {
         std::cerr << "Error during linear regression: " << e.what() << std::endl;
         return EXIT_FAILURE;

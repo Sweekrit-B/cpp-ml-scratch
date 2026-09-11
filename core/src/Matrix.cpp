@@ -6,15 +6,15 @@
 # include <algorithm>
 
 Matrix::Matrix(size_t rows, size_t cols) : rows(rows), cols(cols) {
-    data.resize(rows, std::vector<double>(cols, 0.0));
+    data.assign(rows * cols, 0.0);
 }
 
 double& Matrix::operator()(size_t i, size_t j) {
-    return data[i][j];
+    return data[i * cols + j];
 }
 
 double Matrix::operator()(size_t i, size_t j) const {
-    return data[i][j];
+    return data[i * cols + j];
 }
 
 size_t Matrix::numRows() const { return rows; }
@@ -29,7 +29,7 @@ Matrix Matrix::transpose() const {
 
     for (size_t i = 0; i < rows; ++i) {
         for (size_t j = 0; j < cols; ++j) {
-            transposedData(j, i) = data[i][j];
+            transposedData(j, i) = data[i * cols + j];
         }
     }
     return transposedData;
@@ -39,7 +39,7 @@ Matrix Matrix::operator*(double scalar) const {
     Matrix result(rows, cols);
     for (size_t i = 0; i < rows; ++i) {
         for (size_t j = 0; j < cols; ++j) {
-            result(i, j) = data[i][j] * scalar;
+            result(i, j) = data[i * cols + j] * scalar;
         }
     }
     return result;
@@ -57,7 +57,7 @@ Matrix Matrix::operator*(const Matrix& other) const {
         for (size_t j = 0; j < transposedOther.rows; ++j) {
             result(i, j) = 0;
             for (size_t k = 0; k < cols; ++k) {
-                result(i, j) += data[i][k] * transposedOther(j, k);
+                result(i, j) += data[i * cols + k] * transposedOther(j, k);
             }
         }
     }
@@ -73,7 +73,7 @@ Matrix Matrix::operator-(const Matrix& other) const {
     Matrix result(rows, cols);
     for (size_t i = 0; i < rows; ++i) {
         for (size_t j = 0; j < cols; ++j) {
-            result(i, j) = data[i][j] - other(i, j);
+            result(i, j) = data[i * cols + j] - other(i, j);
         }
     }
     return result;
@@ -87,7 +87,7 @@ Matrix Matrix::operator+(const Matrix& other) const {
     Matrix result(rows, cols);
     for (size_t i = 0; i < rows; ++i) {
         for (size_t j = 0; j < cols; ++j) {
-            result(i, j) = data[i][j] + other(i, j);
+            result(i, j) = data[i * cols + j] + other(i, j);
         }
     }
     return result;
@@ -101,7 +101,7 @@ Matrix Matrix::inverse() const {
     Matrix augmented(rows, 2 * cols);
     for (size_t i = 0; i < rows; ++i) {
         for (size_t j = 0; j < cols; ++j) {
-            augmented(i, j) = data[i][j];
+            augmented(i, j) = data[i * cols + j];
         }
         augmented(i, i + cols) = 1.0; // set the identity matrix part
     }
@@ -147,7 +147,7 @@ Matrix Matrix::hadamardProduct(const Matrix& other) const {
     Matrix result(rows, cols);
     for (size_t i = 0; i < rows; ++i) {
         for (size_t j = 0; j < cols; ++j) {
-            result(i, j) = data[i][j] * other(i, j);
+            result(i, j) = data[i * cols + j] * other(i, j);
         }
     }
     return result;
@@ -157,7 +157,7 @@ Matrix Matrix::sigmoid() const {
     Matrix result(rows, cols);
     for (size_t i = 0; i < rows; ++i) {
         for (size_t j = 0; j < cols; ++j) {
-            result(i, j) = 1.0 / (1.0 + std::exp(-data[i][j]));
+            result(i, j) = 1.0 / (1.0 + std::exp(-data[i * cols + j]));
         }
     }
     return result;
@@ -166,18 +166,18 @@ Matrix Matrix::sigmoid() const {
 Matrix Matrix::softmax() const {
     Matrix result(rows, cols);
     for (size_t i = 0; i < rows; ++i) {
-        double rowMax = data[i][0];
+        double rowMax = data[i * cols + 0];
         for (size_t j = 1; j < cols; ++j) {
-            if (data[i][j] > rowMax) {
-                rowMax = data[i][j];
+            if (data[i * cols + j] > rowMax) {
+                rowMax = data[i * cols + j];
             }
         }
         double sumExp = 0.0;
         for (size_t j = 0; j < cols; ++j) {
-            sumExp += std::exp(data[i][j] - rowMax); // subtract rowMax for numerical stability
+            sumExp += std::exp(data[i * cols + j] - rowMax); // subtract rowMax for numerical stability
         }
         for (size_t j = 0; j < cols; ++j) {
-            result(i, j) = std::exp(data[i][j] - rowMax) / sumExp;
+            result(i, j) = std::exp(data[i * cols + j] - rowMax) / sumExp;
         }
     }
     return result;
@@ -190,7 +190,7 @@ Matrix Matrix::selectRows(const std::vector<size_t>& indices) const {
             throw std::out_of_range("Row index out of range.");
         }
         for (size_t j = 0; j < cols; ++j) {
-            result(i, j) = data[indices[i]][j];
+            result(i, j) = data[indices[i] * cols + j];
         }
     }
     return result;
@@ -218,7 +218,7 @@ double Matrix::norm() const {
     double sumSquares = 0.0;
     for (size_t i = 0; i < rows; ++i) {
         for (size_t j = 0; j < cols; ++j) {
-            sumSquares += data[i][j] * data[i][j];
+            sumSquares += data[i * cols + j] * data[i * cols + j];
         }
     }
     return std::sqrt(sumSquares);

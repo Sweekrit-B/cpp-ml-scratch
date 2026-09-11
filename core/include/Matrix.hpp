@@ -3,7 +3,7 @@
 
 class Matrix {
     private:
-        std::vector<std::vector<double>> data; // 2D vector to store matrix elements
+        std::vector<double> data; // flat, row-major storage: element (i, j) lives at data[i * cols + j]
         size_t rows, cols; // number of rows and columns in the matrix
     
     public:

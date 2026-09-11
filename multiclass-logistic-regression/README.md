@@ -80,6 +80,14 @@ Everything else (`hadamardProduct`, `norm`, `sampleRowIndices`, `selectRows`, et
 over unchanged from the binary version — `sigmoid()` itself isn't used here at all, replaced
 by `softmax()`.
 
+**Storage layout:** `Matrix` backs its elements with a single flat `std::vector<double>` in
+row-major order (element `(i, j)` at `data[i * cols + j]`), not a
+`std::vector<std::vector<double>>`. The nested-vector form makes every row its own separate
+heap allocation, so constructing a `Matrix` costs `rows + 1` allocations instead of 1 — and
+this training loop constructs a fresh result `Matrix` on every multiply/transpose, 1000 times
+per run. Flattening the storage (with no change to the public API, so no call site anywhere
+had to change) cut the MNIST benchmark below from ~30.5s to ~19.7s.
+
 ## Datasets
 
 All expected in the working directory you run the executable from
@@ -141,10 +149,13 @@ the label to the last column (matching this loader's convention) and normalizes 
 described above, just far worse (255 vs. Iris's ~8).
 
 Benchmark result (`learningRate=0.001`, `batchSize=64`, `maxIterations=1000`, reused as-is
-from the Iris run rather than tuned for MNIST specifically): **90.5% test accuracy**, in line
-with reference softmax-regression baselines on full MNIST (~92%). Runtime is dominated by
-`DataLoader::loadCSV`'s naive per-token `std::stod` parsing (~7.85M calls) — training itself
-is fast, since mini-batch gradient cost doesn't scale with total dataset size.
+from the Iris run rather than tuned for MNIST specifically): **90.15% test accuracy**, in line
+with reference softmax-regression baselines on full MNIST (~92%). Timed with `std::chrono` in
+[`src/main.cpp`](src/main.cpp) (`[timing]` lines): **~2.7s loading the CSV, ~19.7s total** —
+so contrary to what you might expect, `DataLoader::loadCSV`'s naive per-token `std::stod`
+parsing (~7.85M calls) is *not* the main cost, only ~14% of the runtime. The other ~86% is the
+1000-iteration training loop itself — see the note on `Matrix`'s storage layout below, which
+cut this run from ~30.5s to ~19.7s (−35%) with no change to `main.cpp` at all.
 
 ## Building and running
 
@@ -178,28 +189,36 @@ Example output (accuracy varies run to run — `Matrix::trainTestSplit` reshuffl
 seed, so the train/test split, and which rows land in each mini-batch, differs each run):
 
 ```
+[timing] loadCSV: 0.0005868s
 Loaded data with 12 rows and 3 columns.
 Split into 10 training rows and 2 test rows.
 ...
 Gradient descent completed after 1000 iterations.
+[timing] total: 0.0500302s (of which loadCSV: 0.0005868s)
 Multiclass logistic regression completed successfully. Final test accuracy: 100%
 
 --- Testing against real-world dataset (Iris: setosa vs versicolor vs virginica) ---
+[timing] loadCSV: 0.0015719s
 Loaded data with 150 rows and 5 columns.
 Split into 120 training rows and 30 test rows.
 ...
 Gradient descent completed after 1000 iterations.
-Iris dataset multiclass logistic regression completed successfully. Final test accuracy: 93.3333%
+[timing] total: 0.0906275s (of which loadCSV: 0.0015719s)
+Iris dataset multiclass logistic regression completed successfully. Final test accuracy: 96.6667%
 
 --- Benchmarking against MNIST (10k rows, 784 features, 10 classes) ---
+[timing] loadCSV: 2.73725s
 Loaded data with 10000 rows and 785 columns.
 Split into 8000 training rows and 2000 test rows.
 ...
 Gradient descent completed after 1000 iterations.
-MNIST multiclass logistic regression completed successfully. Final test accuracy: 90.5%
+[timing] total: 19.6787s (of which loadCSV: 2.73725s)
+MNIST multiclass logistic regression completed successfully. Final test accuracy: 90.15%
 ```
 
-(the MNIST block only runs if you've regenerated `data_mnist.csv` — see above)
+(the MNIST block only runs if you've regenerated `data_mnist.csv` — see above; `[timing]` lines
+come from the `std::chrono` instrumentation around `DataLoader::loadCSV` and the full
+`run...` call in [`src/main.cpp`](src/main.cpp))
 
 ## Ideas for next steps
 
@@ -210,6 +229,12 @@ MNIST multiclass logistic regression completed successfully. Final test accuracy
 - Add a CSV header-row option to `DataLoader::loadCSV`
 - Tune hyperparameters per dataset instead of reusing Iris's `learningRate` for MNIST — it
   happened to work, but wasn't chosen for MNIST specifically
-- `DataLoader::loadCSV`'s per-token `std::stod` parsing is the bottleneck on datasets MNIST's
-  size; worth profiling before benchmarking anything larger (e.g. the full 60k-row MNIST
-  training split, or Covertype)
+- The training loop, not `DataLoader::loadCSV`, is still the majority of runtime at MNIST's
+  scale (~86% of the 19.7s MNIST run) even after flattening `Matrix`'s storage (see above).
+  The remaining cost is that `operator*`/`transpose()`/etc. still allocate a brand-new
+  `Matrix` on every call — 1000 iterations' worth. Pre-allocating the training loop's
+  fixed-shape intermediates once and adding in-place variants (e.g. `multiplyInto(other,
+  result)`) would remove that, at the cost of a more invasive API change
+- Profile before benchmarking anything larger than 10k rows (e.g. the full 60k-row MNIST
+  training split, or Covertype) — `DataLoader::loadCSV`'s per-token `std::stod` parsing may
+  become the bottleneck again at that scale even though it isn't at MNIST's current 10k

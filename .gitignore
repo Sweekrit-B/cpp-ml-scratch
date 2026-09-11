@@ -6,3 +6,5 @@
 
 # Datasets
 multiclass-logistic-regression/data_mnist.csv
+linear-regressor/data_california_housing.csv
+binary-logistic-regressor/data_mnist_binary.csv

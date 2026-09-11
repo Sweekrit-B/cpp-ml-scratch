@@ -3,13 +3,17 @@
 # include "DataLoader.hpp"
 # include "MulticlassLogisticRegressor.hpp"
 # include <iostream>
+# include <chrono>
 
 // Orchestrates the pipeline for one dataset: load -> split once -> prepare -> train -> evaluate.
 double runMulticlassLogisticRegression(const std::string& filename, int batchSize, double lambda = 0,
                                         double learningRate = 0.01, int maxIterations = 1000,
                                         double tolerance = 1e-6, double testRatio = 0.2) {
     // step 0 - receive some data as input
+    auto loadStart = std::chrono::steady_clock::now();
     Matrix data = DataLoader::loadCSV(filename);
+    auto loadEnd = std::chrono::steady_clock::now();
+    std::cout << "[timing] loadCSV: " << std::chrono::duration<double>(loadEnd - loadStart).count() << "s" << std::endl;
     const size_t numCols = data.numCols() - 1; // last column is the target value
     const size_t numClasses = MulticlassLogisticRegressor::countClasses(data, numCols);
     std::cout << "Loaded data with " << data.numRows() << " rows and " << numCols + 1 << " columns." << std::endl;
@@ -28,7 +32,11 @@ double runMulticlassLogisticRegression(const std::string& filename, int batchSiz
     std::cout << "Training and test data separated, intercept term added." << std::endl;
 
     Matrix weights = MulticlassLogisticRegressor::trainMulticlassLogisticRegression(trainX, trainYOneHot, batchSize, lambda, learningRate, maxIterations, tolerance);
-    return MulticlassLogisticRegressor::evaluateMulticlassLogisticRegression(weights, testX, testYLabels);
+    double result = MulticlassLogisticRegressor::evaluateMulticlassLogisticRegression(weights, testX, testYLabels);
+    auto totalEnd = std::chrono::steady_clock::now();
+    std::cout << "[timing] total: " << std::chrono::duration<double>(totalEnd - loadStart).count()
+              << "s (of which loadCSV: " << std::chrono::duration<double>(loadEnd - loadStart).count() << "s)" << std::endl;
+    return result;
 }
 
 int main() {
@@ -41,7 +49,10 @@ int main() {
         std::cout << "Iris dataset multiclass logistic regression completed successfully. Final test accuracy: " << irisAccuracy * 100 << "%" << std::endl;
 
         std::cout << "\n--- Benchmarking against MNIST (10k rows, 784 features, 10 classes) ---\n";
+        auto runStart = std::chrono::steady_clock::now();
         double mnistAccuracy = runMulticlassLogisticRegression("data_mnist.csv", /*batchSize=*/64, /*lambda=*/0.01, /*learningRate=*/0.001, /*maxIterations=*/1000, /*tolerance=*/1e-6, /*testRatio=*/0.2);
+        auto runEnd = std::chrono::steady_clock::now();
+        std::cout << "[timing] runMulticlassLogisticRegression: " << std::chrono::duration<double>(runEnd - runStart).count() << "s" << std::endl;
         std::cout << "MNIST multiclass logistic regression completed successfully. Final test accuracy: " << mnistAccuracy * 100 << "%" << std::endl;
     } catch (const std::exception& e) {
         std::cerr << "Error during multiclass logistic regression: " << e.what() << std::endl;
