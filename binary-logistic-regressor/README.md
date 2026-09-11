@@ -109,30 +109,48 @@ awk -F',' 'NR>1 && ($5=="versicolor" || $5=="virginica") {
 
 ## Building and running
 
-Run from inside `binary-logistic-regressor/`:
+Built via CMake from the **repo root** (`cpp-ml-scratch/`), not from inside this directory —
+the root [`CMakeLists.txt`](../CMakeLists.txt) ties `core` and both regressors together into
+one build:
 
 ```powershell
-g++ -std=c++17 -Wall -Wextra -I../core/include ../core/src/Matrix.cpp ../core/src/DataLoader.cpp src/main.cpp -o binlogreg.exe
-.\binlogreg.exe
+cmake -B build -S .
+cmake --build build
 ```
 
-Same layout rules as `linear-regressor`: `-I../core/include` resolves the shared headers,
-and both `../core/src/*.cpp` files must be listed alongside `src/main.cpp` since each is a
-separate translation unit the linker needs.
+The classifier's own logic lives in
+[`include/BinaryLogisticRegressor.hpp`](include/BinaryLogisticRegressor.hpp) /
+[`src/BinaryLogisticRegressor.cpp`](src/BinaryLogisticRegressor.cpp) — static methods
+(`prepare`, `trainLogisticRegression`, `evaluateLogisticRegression`) that know nothing about
+files or CLI wiring, only matrices; `src/main.cpp` is just the orchestrator (load → split →
+prepare → train → evaluate) plus the entry point.
 
-Example output:
+The executable lands in `build/binary-logistic-regressor/binlogreg.exe` — a different
+directory from this one. Since `DataLoader::loadCSV("data.csv")` uses a relative path, run it
+**from this directory**, pointing at the built binary:
+
+```powershell
+cd binary-logistic-regressor
+..\build\binary-logistic-regressor\binlogreg.exe
+```
+
+Example output (accuracy varies run to run — `Matrix::trainTestSplit` reshuffles with no
+fixed seed, so the train/test split differs each run; the Iris test set is only 20 rows, so
+its accuracy swings more than the larger `data_advertising.csv` split in `linear-regressor`):
 
 ```
 Loaded data with 8 rows and 3 columns.
+Split into 7 training rows and 1 test rows.
 ...
-Accuracy of the logistic regression model: 100%
-Final accuracy: 100%
+Test accuracy of the logistic regression model: 100%
+Logistic regression completed successfully. Final test accuracy: 100%
 
---- Testing against real-world dataset (Iris: sepal length/width -> species) ---
+--- Testing against real-world dataset (Iris: versicolor vs virginica) ---
 Loaded data with 100 rows and 5 columns.
+Split into 80 training rows and 20 test rows.
 ...
-Accuracy of the logistic regression model: 97%
-Final accuracy: 97%
+Test accuracy of the logistic regression model: 80%
+Iris dataset logistic regression completed successfully. Final test accuracy: 80%
 ```
 
 ## Ideas for next steps
@@ -143,4 +161,3 @@ Final accuracy: 97%
   would need a `Matrix::softmax()` — row-normalized, unlike the elementwise `sigmoid()` —
   plus one-hot encoded labels and matrix-valued weights)
 - Add a CSV header-row option to `DataLoader::loadCSV`
-- Fill in `CMakeLists.txt`

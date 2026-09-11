@@ -105,7 +105,9 @@ what's actually specific to this model:
 
 ```
 cpp-ml-scratch/
+├── CMakeLists.txt            # root build — ties core + both regressors together
 ├── core/                     # shared library — generic, model-agnostic building blocks
+│   ├── CMakeLists.txt
 │   ├── include/
 │   │   ├── Matrix.hpp        # Matrix class declaration
 │   │   └── DataLoader.hpp    # CSV loader declaration
@@ -115,11 +117,15 @@ cpp-ml-scratch/
 │   └── tests/
 │       └── test_matrix.cpp   # (WIP)
 └── linear-regressor/
+    ├── CMakeLists.txt
+    ├── include/
+    │   └── LinearRegressor.hpp  # prepare/train/evaluate — static methods, pure functions
     ├── src/
-    │   └── main.cpp          # Regression pipeline (runLinearRegression) + entry point
-    ├── data.csv              # Sample dataset: y = 2x1 + 3x2, noise-free
-    ├── README.md             # this file
-    └── CMakeLists.txt        # (WIP — not yet configured; build via g++ directly for now)
+    │   ├── LinearRegressor.cpp  # implementation
+    │   └── main.cpp              # orchestrator (load → split → prepare → train → evaluate) + entry point
+    ├── data.csv                  # Sample dataset: y = 2x1 + 3x2, noise-free
+    ├── data_advertising.csv
+    └── README.md                 # this file
 ```
 
 ## Datasets
@@ -168,45 +174,48 @@ zero, which is itself a useful signal that the error computation is measuring so
 
 ## Building and running
 
-No CMake target is configured yet, so build directly with g++. Run this from inside
-`linear-regressor/`:
+Built via CMake from the **repo root** (`cpp-ml-scratch/`), not from inside this directory —
+the root [`CMakeLists.txt`](../CMakeLists.txt) ties `core` and both regressors together into
+one build:
 
 ```powershell
-g++ -std=c++17 -Wall -Wextra -I../core/include ../core/src/Matrix.cpp ../core/src/DataLoader.cpp src/main.cpp -o linreg.exe
-.\linreg.exe
+cmake -B build -S .
+cmake --build build
 ```
 
-- `-I../core/include` — resolves `#include "Matrix.hpp"` etc. against `core/include/`, since
-  those headers no longer live inside `linear-regressor/` itself
-- All three `.cpp` files must be listed together — each is a separate translation unit, and
-  the linker needs every one that contributes code (miss one and you'll get an "undefined
-  reference" linker error instead of a compile error). Note two of them (`Matrix.cpp`,
-  `DataLoader.cpp`) now live under `../core/src/` rather than a local `src/`
+This compiles `core` as a static library (`target_include_directories(core PUBLIC include)`
+means neither regressor needs to know `core`'s include path itself — it arrives automatically
+by linking against `core`) and links it into `linreg`.
 
-Example output against the synthetic data above (a perfect, noise-free linear relationship,
-so MSE should land near zero):
+The executable lands in `build/linear-regressor/linreg.exe` — a different directory from this
+one. Since `DataLoader::loadCSV("data.csv")` uses a relative path, run it **from this
+directory**, pointing at the built binary:
+
+```powershell
+cd linear-regressor
+..\build\linear-regressor\linreg.exe
+```
+
+Example output (values vary slightly run to run — `Matrix::trainTestSplit` reshuffles with no
+fixed seed, so the train/test split, and therefore the test MSE, differs each run):
 
 ```
 Loaded data with 5 rows and 3 columns.
-Training data and target values separated.
-Added intercept term to the training data matrix.
+Split into 4 training rows and 1 test rows.
+Training and test data separated, intercept term added.
 Transposed training data matrix.
 Computed product of transposed training data and training data.
 Added regularization term to the product matrix.
 Computed inverse of the product matrix.
 Computed coefficients for the linear regression model.
-Computed predictions using the linear regression model.
-Mean Squared Error: 4.46591e-05
-Linear regression completed successfully. MSE: 4.46591e-05
+Computed predictions on the test set.
+Test Mean Squared Error: 0.0123372
+Linear regression completed successfully. Test MSE: 0.0123372
 ```
 
 ## Ideas for next steps
 
 - Add partial pivoting to `inverse()` for numerical stability on larger datasets
-- Support an intercept term (bias column)
 - Add a CSV header-row option to `DataLoader::loadCSV`
-- Fill in `core/CMakeLists.txt` and `linear-regressor/CMakeLists.txt` so `cmake --build`
-  replaces the hand-typed g++ command
-- Flesh out `core/tests/test_matrix.cpp`
-- Add a classifier model (e.g. logistic regression) alongside `linear-regressor/`, reusing
-  `core/`
+- Flesh out `core/tests/test_matrix.cpp` with `LinearRegressor`-specific tests, now that it's
+  a standalone, testable library rather than logic embedded in `main.cpp`

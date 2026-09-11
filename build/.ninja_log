@@ -1,0 +1,10 @@
+# ninja log v6
+66	1006	8108037715505842	linear-regressor/CMakeFiles/linreg.dir/src/LinearRegressor.cpp.obj	1c80b9491f6971f6
+101	1038	8108037715856755	binary-logistic-regressor/CMakeFiles/binlogreg.dir/src/BinaryLogisticRegressor.cpp.obj	38f8d9d13e6ccea9
+49	1072	8108037715335726	linear-regressor/CMakeFiles/linreg.dir/src/main.cpp.obj	5aa3686a5245eb1d
+85	1075	8108037715691542	binary-logistic-regressor/CMakeFiles/binlogreg.dir/src/main.cpp.obj	9bea50b03285dc36
+24	1096	8108037715145711	core/CMakeFiles/core.dir/src/DataLoader.cpp.obj	678cab06671e21d2
+8	1685	8108037714930294	core/CMakeFiles/core.dir/src/Matrix.cpp.obj	440cb32e24b15aab
+1686	2221	8108037731702314	core/libcore.a	298feabcff091997
+2240	2583	8108037737247559	binary-logistic-regressor/binlogreg.exe	81850384af2b48e6
+2222	2583	8108037737065501	linear-regressor/linreg.exe	3f9ef516d2f33666
