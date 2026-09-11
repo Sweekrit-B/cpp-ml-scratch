@@ -39,6 +39,10 @@ int main() {
         std::cout << "\n--- Testing against real-world dataset (Iris: setosa vs versicolor vs virginica) ---\n";
         double irisAccuracy = runMulticlassLogisticRegression("data_iris_multiclass.csv", /*batchSize=*/16, /*lambda=*/0.01, /*learningRate=*/0.001, /*maxIterations=*/1000, /*tolerance=*/1e-6, /*testRatio=*/0.2);
         std::cout << "Iris dataset multiclass logistic regression completed successfully. Final test accuracy: " << irisAccuracy * 100 << "%" << std::endl;
+
+        std::cout << "\n--- Benchmarking against MNIST (10k rows, 784 features, 10 classes) ---\n";
+        double mnistAccuracy = runMulticlassLogisticRegression("data_mnist.csv", /*batchSize=*/64, /*lambda=*/0.01, /*learningRate=*/0.001, /*maxIterations=*/1000, /*tolerance=*/1e-6, /*testRatio=*/0.2);
+        std::cout << "MNIST multiclass logistic regression completed successfully. Final test accuracy: " << mnistAccuracy * 100 << "%" << std::endl;
     } catch (const std::exception& e) {
         std::cerr << "Error during multiclass logistic regression: " << e.what() << std::endl;
         return EXIT_FAILURE;

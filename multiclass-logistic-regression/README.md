@@ -82,7 +82,7 @@ by `softmax()`.
 
 ## Datasets
 
-Both expected in the working directory you run the executable from
+All expected in the working directory you run the executable from
 (`multiclass-logistic-regression/`). Format: comma-separated numeric rows, no header, feature
 columns first, label last — label must be an integer in `{0, ..., K-1}`.
 
@@ -113,6 +113,38 @@ version's `data_iris.csv` which uses only the versicolor/virginica pair. Feature
 length, sepal width, petal length, petal width (cm). Labels: `setosa → 0`, `versicolor → 1`,
 `virginica → 2`. Setosa is linearly separable from the other two; versicolor/virginica overlap
 somewhat, so this is a genuine (if not maximally hard) multiclass test.
+
+### `data_mnist.csv` — real-world, larger-scale (not committed)
+
+10,000 rows (the standard MNIST *test* split), 784 features (28×28 grayscale pixels,
+flattened), 10 classes (digits 0–9) — used as a benchmark for how this from-scratch
+implementation holds up well past Iris's scale (65x the rows, 196x the features). **Not
+committed** — it's ~18MB, large enough that it doesn't belong in this repo's history, so it's
+listed in [`../.gitignore`](../.gitignore) instead. Regenerate it with:
+
+```bash
+curl -sL -o /tmp/mnist_test_raw.csv https://pjreddie.com/media/files/mnist_test.csv
+awk -F',' 'BEGIN{OFS=","} {
+    label=$1
+    line=""
+    for (i=2; i<=NF; i++) {
+        val = $i / 255.0
+        line = (line=="") ? val : line OFS val
+    }
+    print line OFS label
+}' /tmp/mnist_test_raw.csv > data_mnist.csv
+```
+
+The source mirror puts the label *first* and pixels as raw `0–255` ints; the `awk` step moves
+the label to the last column (matching this loader's convention) and normalizes pixels to
+`[0, 1]` — skipping that normalization would reintroduce the same scale-sensitivity problem
+described above, just far worse (255 vs. Iris's ~8).
+
+Benchmark result (`learningRate=0.001`, `batchSize=64`, `maxIterations=1000`, reused as-is
+from the Iris run rather than tuned for MNIST specifically): **90.5% test accuracy**, in line
+with reference softmax-regression baselines on full MNIST (~92%). Runtime is dominated by
+`DataLoader::loadCSV`'s naive per-token `std::stod` parsing (~7.85M calls) — training itself
+is fast, since mini-batch gradient cost doesn't scale with total dataset size.
 
 ## Building and running
 
@@ -158,7 +190,16 @@ Split into 120 training rows and 30 test rows.
 ...
 Gradient descent completed after 1000 iterations.
 Iris dataset multiclass logistic regression completed successfully. Final test accuracy: 93.3333%
+
+--- Benchmarking against MNIST (10k rows, 784 features, 10 classes) ---
+Loaded data with 10000 rows and 785 columns.
+Split into 8000 training rows and 2000 test rows.
+...
+Gradient descent completed after 1000 iterations.
+MNIST multiclass logistic regression completed successfully. Final test accuracy: 90.5%
 ```
+
+(the MNIST block only runs if you've regenerated `data_mnist.csv` — see above)
 
 ## Ideas for next steps
 
@@ -167,3 +208,8 @@ Iris dataset multiclass logistic regression completed successfully. Final test a
 - Replace the noisy tolerance-based convergence check with a moving-average alternative (same
   idea flagged in the binary version's README)
 - Add a CSV header-row option to `DataLoader::loadCSV`
+- Tune hyperparameters per dataset instead of reusing Iris's `learningRate` for MNIST — it
+  happened to work, but wasn't chosen for MNIST specifically
+- `DataLoader::loadCSV`'s per-token `std::stod` parsing is the bottleneck on datasets MNIST's
+  size; worth profiling before benchmarking anything larger (e.g. the full 60k-row MNIST
+  training split, or Covertype)

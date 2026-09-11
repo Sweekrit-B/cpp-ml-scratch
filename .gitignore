@@ -3,3 +3,6 @@
 *.obj
 *.exe
 *.out
+
+# Datasets
+multiclass-logistic-regression/data_mnist.csv
