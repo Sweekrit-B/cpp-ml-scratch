@@ -7,7 +7,7 @@
 
 // Orchestrates the pipeline for one dataset: load -> split once -> prepare -> train -> evaluate.
 double runMultilayerPerceptron(const std::string& filename, int batchSize, double lambda = 0,
-                               double learningRate = 0.01, int maxIterations = 1000,
+                               double learningRate = 0.1, int maxIterations = 1000,
                                double tolerance = 1e-6, double testRatio = 0.2,
                                const std::vector<size_t>& hiddenSizes = {16, 32, 16}, // hidden layer widths; input/output sizes come from the data
                                const std::vector<Activation>& activations = {Activations::relu(), Activations::relu(), Activations::relu()}) { // one per hidden layer
