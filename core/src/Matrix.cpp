@@ -4,6 +4,7 @@
 # include <cmath>
 # include <random>
 # include <algorithm>
+# include <numeric>
 
 Matrix::Matrix(size_t rows, size_t cols) : rows(rows), cols(cols) {
     data.assign(rows * cols, 0.0);
@@ -178,6 +179,71 @@ Matrix Matrix::softmax() const {
         }
         for (size_t j = 0; j < cols; ++j) {
             result(i, j) = std::exp(data[i * cols + j] - rowMax) / sumExp;
+        }
+    }
+    return result;
+}
+
+Matrix Matrix::relu() const {
+    Matrix result(rows, cols);
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            result(i, j) = std::max(0.0, data[i * cols + j]);
+        }
+    }
+    return result;
+}
+
+Matrix Matrix::tanh() const {
+    Matrix result(rows, cols);
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            result(i, j) = std::tanh(data[i * cols + j]);
+        }
+    }
+    return result;
+}
+
+Matrix Matrix::reluDerivative() const {
+    Matrix result(rows, cols);
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            result(i, j) = data[i * cols + j] > 0.0 ? 1.0 : 0.0;
+        }
+    }
+    return result;
+}
+
+Matrix Matrix::tanhDerivative() const {
+    Matrix result(rows, cols);
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            double tanhValue = std::tanh(data[i * cols + j]);
+            result(i, j) = 1.0 - tanhValue * tanhValue;
+        }
+    }
+    return result;
+}
+
+Matrix Matrix::appendBiasColumn() const {
+    Matrix result(rows, cols + 1);
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            result(i, j) = data[i * cols + j];
+        }
+        result(i, cols) = 1.0; // append bias term
+    }
+    return result;
+}
+
+Matrix Matrix::removeLastColumn() const {
+    if (cols == 0) {
+        throw std::invalid_argument("Matrix has no columns to remove.");
+    }
+    Matrix result(rows, cols - 1);
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols - 1; ++j) {
+            result(i, j) = data[i * cols + j];
         }
     }
     return result;

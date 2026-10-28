@@ -78,8 +78,6 @@ build core/CMakeFiles/core.dir/src/Matrix.cpp.obj: CXX_COMPILER__core_unscanned_
   INCLUDES = -IC:/Users/sweek/Downloads/projects/cpp-ml-scratch/core/include
   OBJECT_DIR = core\CMakeFiles\core.dir
   OBJECT_FILE_DIR = core\CMakeFiles\core.dir\src
-  TARGET_COMPILE_PDB = core\CMakeFiles\core.dir\core.pdb
-  TARGET_PDB = core\libcore.pdb
 
 build core/CMakeFiles/core.dir/src/DataLoader.cpp.obj: CXX_COMPILER__core_unscanned_ C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/core/src/DataLoader.cpp || cmake_object_order_depends_target_core
   DEP_FILE = core\CMakeFiles\core.dir\src\DataLoader.cpp.obj.d
@@ -87,8 +85,6 @@ build core/CMakeFiles/core.dir/src/DataLoader.cpp.obj: CXX_COMPILER__core_unscan
   INCLUDES = -IC:/Users/sweek/Downloads/projects/cpp-ml-scratch/core/include
   OBJECT_DIR = core\CMakeFiles\core.dir
   OBJECT_FILE_DIR = core\CMakeFiles\core.dir\src
-  TARGET_COMPILE_PDB = core\CMakeFiles\core.dir\core.pdb
-  TARGET_PDB = core\libcore.pdb
 
 
 # =============================================================================
@@ -102,9 +98,8 @@ build core/libcore.a: CXX_STATIC_LIBRARY_LINKER__core_ core/CMakeFiles/core.dir/
   OBJECT_DIR = core\CMakeFiles\core.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
-  TARGET_COMPILE_PDB = core\CMakeFiles\core.dir\core.pdb
   TARGET_FILE = core\libcore.a
-  TARGET_PDB = core\libcore.pdb
+  TARGET_PDB = core.a.dbg
 
 
 #############################################
@@ -149,8 +144,6 @@ build linear-regressor/CMakeFiles/linreg.dir/src/main.cpp.obj: CXX_COMPILER__lin
   INCLUDES = -IC:/Users/sweek/Downloads/projects/cpp-ml-scratch/linear-regressor/include -IC:/Users/sweek/Downloads/projects/cpp-ml-scratch/core/include
   OBJECT_DIR = linear-regressor\CMakeFiles\linreg.dir
   OBJECT_FILE_DIR = linear-regressor\CMakeFiles\linreg.dir\src
-  TARGET_COMPILE_PDB = linear-regressor\CMakeFiles\linreg.dir\
-  TARGET_PDB = linear-regressor\linreg.pdb
 
 build linear-regressor/CMakeFiles/linreg.dir/src/LinearRegressor.cpp.obj: CXX_COMPILER__linreg_unscanned_ C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/linear-regressor/src/LinearRegressor.cpp || cmake_object_order_depends_target_linreg
   DEP_FILE = linear-regressor\CMakeFiles\linreg.dir\src\LinearRegressor.cpp.obj.d
@@ -158,8 +151,6 @@ build linear-regressor/CMakeFiles/linreg.dir/src/LinearRegressor.cpp.obj: CXX_CO
   INCLUDES = -IC:/Users/sweek/Downloads/projects/cpp-ml-scratch/linear-regressor/include -IC:/Users/sweek/Downloads/projects/cpp-ml-scratch/core/include
   OBJECT_DIR = linear-regressor\CMakeFiles\linreg.dir
   OBJECT_FILE_DIR = linear-regressor\CMakeFiles\linreg.dir\src
-  TARGET_COMPILE_PDB = linear-regressor\CMakeFiles\linreg.dir\
-  TARGET_PDB = linear-regressor\linreg.pdb
 
 
 # =============================================================================
@@ -174,10 +165,9 @@ build linear-regressor/linreg.exe: CXX_EXECUTABLE_LINKER__linreg_ linear-regress
   OBJECT_DIR = linear-regressor\CMakeFiles\linreg.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
-  TARGET_COMPILE_PDB = linear-regressor\CMakeFiles\linreg.dir\
   TARGET_FILE = linear-regressor\linreg.exe
   TARGET_IMPLIB = linear-regressor\liblinreg.dll.a
-  TARGET_PDB = linear-regressor\linreg.pdb
+  TARGET_PDB = linreg.exe.dbg
 
 
 #############################################
@@ -222,8 +212,6 @@ build binary-logistic-regressor/CMakeFiles/binlogreg.dir/src/main.cpp.obj: CXX_C
   INCLUDES = -IC:/Users/sweek/Downloads/projects/cpp-ml-scratch/binary-logistic-regressor/include -IC:/Users/sweek/Downloads/projects/cpp-ml-scratch/core/include
   OBJECT_DIR = binary-logistic-regressor\CMakeFiles\binlogreg.dir
   OBJECT_FILE_DIR = binary-logistic-regressor\CMakeFiles\binlogreg.dir\src
-  TARGET_COMPILE_PDB = binary-logistic-regressor\CMakeFiles\binlogreg.dir\
-  TARGET_PDB = binary-logistic-regressor\binlogreg.pdb
 
 build binary-logistic-regressor/CMakeFiles/binlogreg.dir/src/BinaryLogisticRegressor.cpp.obj: CXX_COMPILER__binlogreg_unscanned_ C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/binary-logistic-regressor/src/BinaryLogisticRegressor.cpp || cmake_object_order_depends_target_binlogreg
   DEP_FILE = binary-logistic-regressor\CMakeFiles\binlogreg.dir\src\BinaryLogisticRegressor.cpp.obj.d
@@ -231,8 +219,6 @@ build binary-logistic-regressor/CMakeFiles/binlogreg.dir/src/BinaryLogisticRegre
   INCLUDES = -IC:/Users/sweek/Downloads/projects/cpp-ml-scratch/binary-logistic-regressor/include -IC:/Users/sweek/Downloads/projects/cpp-ml-scratch/core/include
   OBJECT_DIR = binary-logistic-regressor\CMakeFiles\binlogreg.dir
   OBJECT_FILE_DIR = binary-logistic-regressor\CMakeFiles\binlogreg.dir\src
-  TARGET_COMPILE_PDB = binary-logistic-regressor\CMakeFiles\binlogreg.dir\
-  TARGET_PDB = binary-logistic-regressor\binlogreg.pdb
 
 
 # =============================================================================
@@ -247,10 +233,9 @@ build binary-logistic-regressor/binlogreg.exe: CXX_EXECUTABLE_LINKER__binlogreg_
   OBJECT_DIR = binary-logistic-regressor\CMakeFiles\binlogreg.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
-  TARGET_COMPILE_PDB = binary-logistic-regressor\CMakeFiles\binlogreg.dir\
   TARGET_FILE = binary-logistic-regressor\binlogreg.exe
   TARGET_IMPLIB = binary-logistic-regressor\libbinlogreg.dll.a
-  TARGET_PDB = binary-logistic-regressor\binlogreg.pdb
+  TARGET_PDB = binlogreg.exe.dbg
 
 
 #############################################
@@ -276,6 +261,142 @@ build binary-logistic-regressor/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
 build binary-logistic-regressor/rebuild_cache: phony binary-logistic-regressor/CMakeFiles/rebuild_cache.util
 
 # =============================================================================
+# Write statements declared in CMakeLists.txt:
+# C:/Users/sweek/Downloads/projects/cpp-ml-scratch/CMakeLists.txt
+# =============================================================================
+
+# =============================================================================
+# Object build statements for EXECUTABLE target multilogreg
+
+
+#############################################
+# Order-only phony target for multilogreg
+
+build cmake_object_order_depends_target_multilogreg: phony || cmake_object_order_depends_target_core
+
+build multiclass-logistic-regression/CMakeFiles/multilogreg.dir/src/main.cpp.obj: CXX_COMPILER__multilogreg_unscanned_ C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/multiclass-logistic-regression/src/main.cpp || cmake_object_order_depends_target_multilogreg
+  DEP_FILE = multiclass-logistic-regression\CMakeFiles\multilogreg.dir\src\main.cpp.obj.d
+  FLAGS = -std=gnu++17
+  INCLUDES = -IC:/Users/sweek/Downloads/projects/cpp-ml-scratch/multiclass-logistic-regression/include -IC:/Users/sweek/Downloads/projects/cpp-ml-scratch/core/include
+  OBJECT_DIR = multiclass-logistic-regression\CMakeFiles\multilogreg.dir
+  OBJECT_FILE_DIR = multiclass-logistic-regression\CMakeFiles\multilogreg.dir\src
+
+build multiclass-logistic-regression/CMakeFiles/multilogreg.dir/src/MulticlassLogisticRegressor.cpp.obj: CXX_COMPILER__multilogreg_unscanned_ C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/multiclass-logistic-regression/src/MulticlassLogisticRegressor.cpp || cmake_object_order_depends_target_multilogreg
+  DEP_FILE = multiclass-logistic-regression\CMakeFiles\multilogreg.dir\src\MulticlassLogisticRegressor.cpp.obj.d
+  FLAGS = -std=gnu++17
+  INCLUDES = -IC:/Users/sweek/Downloads/projects/cpp-ml-scratch/multiclass-logistic-regression/include -IC:/Users/sweek/Downloads/projects/cpp-ml-scratch/core/include
+  OBJECT_DIR = multiclass-logistic-regression\CMakeFiles\multilogreg.dir
+  OBJECT_FILE_DIR = multiclass-logistic-regression\CMakeFiles\multilogreg.dir\src
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target multilogreg
+
+
+#############################################
+# Link the executable multiclass-logistic-regression\multilogreg.exe
+
+build multiclass-logistic-regression/multilogreg.exe: CXX_EXECUTABLE_LINKER__multilogreg_ multiclass-logistic-regression/CMakeFiles/multilogreg.dir/src/main.cpp.obj multiclass-logistic-regression/CMakeFiles/multilogreg.dir/src/MulticlassLogisticRegressor.cpp.obj | core/libcore.a || core/libcore.a
+  LINK_LIBRARIES = core/libcore.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  OBJECT_DIR = multiclass-logistic-regression\CMakeFiles\multilogreg.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = multiclass-logistic-regression\multilogreg.exe
+  TARGET_IMPLIB = multiclass-logistic-regression\libmultilogreg.dll.a
+  TARGET_PDB = multilogreg.exe.dbg
+
+
+#############################################
+# Utility command for edit_cache
+
+build multiclass-logistic-regression/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\sweek\Downloads\projects\cpp-ml-scratch\build\multiclass-logistic-regression && C:\Strawberry\c\bin\cmake.exe -E echo "No interactive CMake dialog available.""
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build multiclass-logistic-regression/edit_cache: phony multiclass-logistic-regression/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build multiclass-logistic-regression/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\sweek\Downloads\projects\cpp-ml-scratch\build\multiclass-logistic-regression && C:\Strawberry\c\bin\cmake.exe --regenerate-during-build -SC:\Users\sweek\Downloads\projects\cpp-ml-scratch -BC:\Users\sweek\Downloads\projects\cpp-ml-scratch\build"
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build multiclass-logistic-regression/rebuild_cache: phony multiclass-logistic-regression/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# C:/Users/sweek/Downloads/projects/cpp-ml-scratch/CMakeLists.txt
+# =============================================================================
+
+# =============================================================================
+# Object build statements for EXECUTABLE target multilayerperceptron
+
+
+#############################################
+# Order-only phony target for multilayerperceptron
+
+build cmake_object_order_depends_target_multilayerperceptron: phony || cmake_object_order_depends_target_core
+
+build multilayer-perceptron/CMakeFiles/multilayerperceptron.dir/src/main.cpp.obj: CXX_COMPILER__multilayerperceptron_unscanned_ C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/multilayer-perceptron/src/main.cpp || cmake_object_order_depends_target_multilayerperceptron
+  DEP_FILE = multilayer-perceptron\CMakeFiles\multilayerperceptron.dir\src\main.cpp.obj.d
+  FLAGS = -std=gnu++17
+  INCLUDES = -IC:/Users/sweek/Downloads/projects/cpp-ml-scratch/multilayer-perceptron/include -IC:/Users/sweek/Downloads/projects/cpp-ml-scratch/core/include
+  OBJECT_DIR = multilayer-perceptron\CMakeFiles\multilayerperceptron.dir
+  OBJECT_FILE_DIR = multilayer-perceptron\CMakeFiles\multilayerperceptron.dir\src
+
+build multilayer-perceptron/CMakeFiles/multilayerperceptron.dir/src/MultilayerPerceptron.cpp.obj: CXX_COMPILER__multilayerperceptron_unscanned_ C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/multilayer-perceptron/src/MultilayerPerceptron.cpp || cmake_object_order_depends_target_multilayerperceptron
+  DEP_FILE = multilayer-perceptron\CMakeFiles\multilayerperceptron.dir\src\MultilayerPerceptron.cpp.obj.d
+  FLAGS = -std=gnu++17
+  INCLUDES = -IC:/Users/sweek/Downloads/projects/cpp-ml-scratch/multilayer-perceptron/include -IC:/Users/sweek/Downloads/projects/cpp-ml-scratch/core/include
+  OBJECT_DIR = multilayer-perceptron\CMakeFiles\multilayerperceptron.dir
+  OBJECT_FILE_DIR = multilayer-perceptron\CMakeFiles\multilayerperceptron.dir\src
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target multilayerperceptron
+
+
+#############################################
+# Link the executable multilayer-perceptron\multilayerperceptron.exe
+
+build multilayer-perceptron/multilayerperceptron.exe: CXX_EXECUTABLE_LINKER__multilayerperceptron_ multilayer-perceptron/CMakeFiles/multilayerperceptron.dir/src/main.cpp.obj multilayer-perceptron/CMakeFiles/multilayerperceptron.dir/src/MultilayerPerceptron.cpp.obj | core/libcore.a || core/libcore.a
+  LINK_LIBRARIES = core/libcore.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  OBJECT_DIR = multilayer-perceptron\CMakeFiles\multilayerperceptron.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = multilayer-perceptron\multilayerperceptron.exe
+  TARGET_IMPLIB = multilayer-perceptron\libmultilayerperceptron.dll.a
+  TARGET_PDB = multilayerperceptron.exe.dbg
+
+
+#############################################
+# Utility command for edit_cache
+
+build multilayer-perceptron/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\sweek\Downloads\projects\cpp-ml-scratch\build\multilayer-perceptron && C:\Strawberry\c\bin\cmake.exe -E echo "No interactive CMake dialog available.""
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build multilayer-perceptron/edit_cache: phony multilayer-perceptron/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build multilayer-perceptron/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\sweek\Downloads\projects\cpp-ml-scratch\build\multilayer-perceptron && C:\Strawberry\c\bin\cmake.exe --regenerate-during-build -SC:\Users\sweek\Downloads\projects\cpp-ml-scratch -BC:\Users\sweek\Downloads\projects\cpp-ml-scratch\build"
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build multilayer-perceptron/rebuild_cache: phony multilayer-perceptron/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
 # Target aliases.
 
 build binlogreg: phony binary-logistic-regressor/binlogreg.exe
@@ -290,6 +411,14 @@ build linreg: phony linear-regressor/linreg.exe
 
 build linreg.exe: phony linear-regressor/linreg.exe
 
+build multilayerperceptron: phony multilayer-perceptron/multilayerperceptron.exe
+
+build multilayerperceptron.exe: phony multilayer-perceptron/multilayerperceptron.exe
+
+build multilogreg: phony multiclass-logistic-regression/multilogreg.exe
+
+build multilogreg.exe: phony multiclass-logistic-regression/multilogreg.exe
+
 # =============================================================================
 # Folder targets.
 
@@ -298,7 +427,7 @@ build linreg.exe: phony linear-regressor/linreg.exe
 #############################################
 # Folder: C:/Users/sweek/Downloads/projects/cpp-ml-scratch/build
 
-build all: phony core/all linear-regressor/all binary-logistic-regressor/all
+build all: phony core/all linear-regressor/all binary-logistic-regressor/all multiclass-logistic-regression/all multilayer-perceptron/all
 
 # =============================================================================
 
@@ -322,20 +451,34 @@ build core/all: phony core/libcore.a
 build linear-regressor/all: phony linear-regressor/linreg.exe
 
 # =============================================================================
+
+#############################################
+# Folder: C:/Users/sweek/Downloads/projects/cpp-ml-scratch/build/multiclass-logistic-regression
+
+build multiclass-logistic-regression/all: phony multiclass-logistic-regression/multilogreg.exe
+
+# =============================================================================
+
+#############################################
+# Folder: C:/Users/sweek/Downloads/projects/cpp-ml-scratch/build/multilayer-perceptron
+
+build multilayer-perceptron/all: phony multilayer-perceptron/multilayerperceptron.exe
+
+# =============================================================================
 # Built-in targets
 
 
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCXXCompiler.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCXXCompilerABI.cpp C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCXXInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCommonLanguageInclude.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCompilerIdDetection.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCXXCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCompileFeatures.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCompilerABI.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCompilerId.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineRCCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineSystem.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeFindBinUtils.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeGenericSystem.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeInitializeConfigs.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeLanguageInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeNinjaFindMake.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeParseImplicitIncludeInfo.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeParseImplicitLinkInfo.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeParseLibraryArchitecture.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeRCCompiler.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeRCInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeSystem.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeSystemSpecificInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeSystemSpecificInitialize.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeTestCXXCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeTestCompilerCommon.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeTestRCCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/ADSP-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/ARMCC-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/ARMClang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/AppleClang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Borland-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Clang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Clang-DetermineCompilerInternal.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Cray-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/CrayClang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Embarcadero-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Fujitsu-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GHS-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-CXX.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-FindBinUtils.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/HP-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/IAR-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/IBMClang-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Intel-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/LCC-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/MSVC-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/NVHPC-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/NVIDIA-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/OrangeC-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/PGI-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/PathScale-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/SCO-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/TI-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/TIClang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Tasking-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Watcom-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/XL-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Internal/CMakeDetermineLinkerId.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Internal/FeatureTesting.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-Determine-CXX.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-CXX.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-Initialize.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-windres.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/WindowsPaths.cmake C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/CMakeLists.txt C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/binary-logistic-regressor/CMakeLists.txt C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/core/CMakeLists.txt C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/linear-regressor/CMakeLists.txt CMakeCache.txt CMakeFiles/3.29.2/CMakeCXXCompiler.cmake CMakeFiles/3.29.2/CMakeRCCompiler.cmake CMakeFiles/3.29.2/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCXXInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCommonLanguageInclude.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeGenericSystem.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeInitializeConfigs.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeLanguageInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeRCInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeSystemSpecificInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeSystemSpecificInitialize.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-CXX.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-CXX.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-Initialize.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-windres.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/WindowsPaths.cmake C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/CMakeLists.txt C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/binary-logistic-regressor/CMakeLists.txt C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/core/CMakeLists.txt C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/linear-regressor/CMakeLists.txt C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/multiclass-logistic-regression/CMakeLists.txt C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/multilayer-perceptron/CMakeLists.txt CMakeCache.txt CMakeFiles/3.29.2/CMakeCXXCompiler.cmake CMakeFiles/3.29.2/CMakeRCCompiler.cmake CMakeFiles/3.29.2/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCXXCompiler.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCXXCompilerABI.cpp C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCXXInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCommonLanguageInclude.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCompilerIdDetection.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCXXCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCompileFeatures.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCompilerABI.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineCompilerId.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineRCCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeDetermineSystem.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeFindBinUtils.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeGenericSystem.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeInitializeConfigs.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeLanguageInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeNinjaFindMake.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeParseImplicitIncludeInfo.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeParseImplicitLinkInfo.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeParseLibraryArchitecture.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeRCCompiler.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeRCInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeSystem.cmake.in C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeSystemSpecificInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeSystemSpecificInitialize.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeTestCXXCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeTestCompilerCommon.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeTestRCCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/ADSP-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/ARMCC-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/ARMClang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/AppleClang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Borland-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Clang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Clang-DetermineCompilerInternal.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Cray-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/CrayClang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Embarcadero-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Fujitsu-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GHS-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-CXX.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-FindBinUtils.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/HP-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/IAR-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/IBMClang-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Intel-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/LCC-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/MSVC-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/NVHPC-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/NVIDIA-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/OrangeC-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/PGI-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/PathScale-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/SCO-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/TI-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/TIClang-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Tasking-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/Watcom-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/XL-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Internal/CMakeDetermineLinkerId.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Internal/FeatureTesting.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-Determine-CXX.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-CXX.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-Initialize.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-windres.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/WindowsPaths.cmake C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/CMakeLists.txt C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/binary-logistic-regressor/CMakeLists.txt C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/core/CMakeLists.txt C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/linear-regressor/CMakeLists.txt CMakeCache.txt CMakeFiles/3.29.2/CMakeCXXCompiler.cmake CMakeFiles/3.29.2/CMakeRCCompiler.cmake CMakeFiles/3.29.2/CMakeSystem.cmake: phony
+build C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCXXInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeCommonLanguageInclude.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeGenericSystem.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeInitializeConfigs.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeLanguageInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeRCInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeSystemSpecificInformation.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/CMakeSystemSpecificInitialize.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU-CXX.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Compiler/GNU.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU-CXX.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-GNU.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-Initialize.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows-windres.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/Windows.cmake C$:/Strawberry/c/share/cmake-3.29/Modules/Platform/WindowsPaths.cmake C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/CMakeLists.txt C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/binary-logistic-regressor/CMakeLists.txt C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/core/CMakeLists.txt C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/linear-regressor/CMakeLists.txt C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/multiclass-logistic-regression/CMakeLists.txt C$:/Users/sweek/Downloads/projects/cpp-ml-scratch/multilayer-perceptron/CMakeLists.txt CMakeCache.txt CMakeFiles/3.29.2/CMakeCXXCompiler.cmake CMakeFiles/3.29.2/CMakeRCCompiler.cmake CMakeFiles/3.29.2/CMakeSystem.cmake: phony
 
 
 #############################################

@@ -1,5 +1,6 @@
-#pragma once // prevents multiple inclusions of the same header file
-#include <vector>
+# pragma once // prevents multiple inclusions of the same header file
+# include <vector>
+# include <functional>
 
 class Matrix {
     private:
@@ -21,6 +22,12 @@ class Matrix {
         Matrix hadamardProduct(const Matrix& other) const; // element-wise mutiplication
         Matrix sigmoid() const; // applies the sigmoid function to each element of the matrix
         Matrix softmax() const; // applies the softmax function to each row of the matrix
+        Matrix relu() const; // applies the ReLU function to each element of the matrix
+        Matrix tanh() const; // applies the tanh function to each element of the matrix
+        Matrix reluDerivative() const; // applies the derivative of the ReLU function to each element of the matrix
+        Matrix tanhDerivative() const; // applies the derivative of the tanh function to each element of the matrix
+        Matrix appendBiasColumn() const; // appends a column of 1s to the matrix for bias
+        Matrix removeLastColumn() const; // removes the last column of the matrix
         Matrix selectRows(const std::vector<size_t>& indices) const; // selects specific rows from the matrix
         static std::vector<size_t> sampleRowIndices(size_t totalRows, size_t numSamples); // samples row indices
         double norm() const; // computes the L2 norm of the matrix
