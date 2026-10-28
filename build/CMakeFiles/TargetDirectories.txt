@@ -9,3 +9,9 @@ C:/Users/sweek/Downloads/projects/cpp-ml-scratch/build/linear-regressor/CMakeFil
 C:/Users/sweek/Downloads/projects/cpp-ml-scratch/build/binary-logistic-regressor/CMakeFiles/binlogreg.dir
 C:/Users/sweek/Downloads/projects/cpp-ml-scratch/build/binary-logistic-regressor/CMakeFiles/edit_cache.dir
 C:/Users/sweek/Downloads/projects/cpp-ml-scratch/build/binary-logistic-regressor/CMakeFiles/rebuild_cache.dir
+C:/Users/sweek/Downloads/projects/cpp-ml-scratch/build/multiclass-logistic-regression/CMakeFiles/multilogreg.dir
+C:/Users/sweek/Downloads/projects/cpp-ml-scratch/build/multiclass-logistic-regression/CMakeFiles/edit_cache.dir
+C:/Users/sweek/Downloads/projects/cpp-ml-scratch/build/multiclass-logistic-regression/CMakeFiles/rebuild_cache.dir
+C:/Users/sweek/Downloads/projects/cpp-ml-scratch/build/multilayer-perceptron/CMakeFiles/multilayerperceptron.dir
+C:/Users/sweek/Downloads/projects/cpp-ml-scratch/build/multilayer-perceptron/CMakeFiles/edit_cache.dir
+C:/Users/sweek/Downloads/projects/cpp-ml-scratch/build/multilayer-perceptron/CMakeFiles/rebuild_cache.dir
